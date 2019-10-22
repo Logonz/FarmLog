@@ -871,6 +871,14 @@ function FarmLog:OnLootEvent(text)
 		) 
 	then	
 		local ahValue = FLogGlobalVars.ahPrice[itemLink]
+		--We want to fetch the data from TSM instead.
+		if(TSM_API and not ahValue) then
+				local TSM_ItemString = TSM_API.ToItemString(itemLink)
+				local value = TSM_API.GetCustomPriceValue("dbmarket", TSM_ItemString);
+				--Change to copper instead.
+				value = value / 10000;
+				ahValue = value;
+		end
 		if ahValue and ahValue > 0 then 
 			IncreaseSessionVar("ah", ahValue)
 		else
